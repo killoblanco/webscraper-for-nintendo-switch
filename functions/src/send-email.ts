@@ -25,7 +25,7 @@ async function sendEmail(stockInfo: StockInfo[]) {
 
   const shouldSend = stockInfo.some((stock) => stock.hasStock);
 
-  if (!shouldSend) {
+  if (shouldSend) {
     for (const stock of stockInfo) {
       if (stock.hasStock) {
         body += `<li>🎉 ${stock.store} has stock in ${stock.shopUrl}</li>`;
