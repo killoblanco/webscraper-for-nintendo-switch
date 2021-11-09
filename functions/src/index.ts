@@ -5,6 +5,7 @@ import falabella from "./falabella";
 import ktronix from "./ktronix";
 import panamericana from "./panamericana";
 import sendEmail from "./send-email";
+import {StockInfo} from "./types";
 
 const sites = [
   panamericana,
@@ -14,10 +15,10 @@ const sites = [
 ];
 
 export const searchForConsole = pubsub.schedule("every 1 hours")
-    .onRun(async (context) => {
+    .onRun(async () => {
       const browser = await chromium.launch({timeout: 0});
 
-      const stocks: any[] = [];
+      const stocks: StockInfo[] = [];
 
       for (const {store, url, checkStock} of sites) {
         const {hasStock, shopUrl} = await checkStock({browser, url: url});
