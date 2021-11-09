@@ -1,10 +1,5 @@
 import {NodeMailgun} from "ts-mailgun";
-
-interface StockInfo {
-    store: string,
-    hasStock: boolean,
-    shopUrl: string,
-}
+import {StockInfo} from "./types";
 
 const mailgunClient = new NodeMailgun(
     "key-cba685ce18761381e5657d53cb9378e3",
@@ -18,7 +13,7 @@ mailgunClient.init();
 
 /**
  * Send an email to the user with the stock info
- * @param stockInfo
+ * @param {any[]} stockInfo
  */
 async function sendEmail(stockInfo: StockInfo[]) {
   let body = "<ul>";
