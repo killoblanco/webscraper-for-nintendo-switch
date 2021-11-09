@@ -1,11 +1,17 @@
 import {CheckStockProps} from "./types";
 
+/**
+ * Check stock
+ * @param {any} browser
+ * @param {string }url
+ */
 async function checkStock({browser, url}: CheckStockProps) {
   const page = await browser.newPage();
   await page.goto(url);
   const orderSelector = await page.$$("#orderDesktop");
   orderSelector[0].click();
-  const sortOption = await page.waitForSelector(".edd-option[title=\"Mayor precio\"]");
+  const sortOption = await page
+      .waitForSelector(".edd-option[title=\"Mayor precio\"]");
   await sortOption.click();
   await page.waitForTimeout(1000);
   const items = await page.$$(".item__showcase__productname__link");
