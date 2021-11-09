@@ -1,5 +1,10 @@
 import {CheckStockProps} from "./types";
 
+/**
+ * Check stock
+ * @param {any} browser
+ * @param {string }url
+ */
 async function checkStock({browser, url}: CheckStockProps) {
   const page = await browser.newPage();
   await page.goto(url);
