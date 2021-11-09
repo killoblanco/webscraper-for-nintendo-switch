@@ -1,9 +1,33 @@
-import * as functions from "firebase-functions";
+import {pubsub} from "firebase-functions";
+import {chromium} from "playwright";
+import alkosto from "./alkosto";
+import falabella from "./falabella";
+import ktronix from "./ktronix";
+import panamericana from "./panamericana";
+import sendEmail from "./send-email";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+const sites = [
+  panamericana,
+  alkosto,
+  ktronix,
+  falabella,
+];
+
+export const searchForConsole = pubsub.schedule("every 1 hours")
+    .onRun(async (context) => {
+      const browser = await chromium.launch({timeout: 0});
+
+      const stocks: any[] = [];
+
+      for (const {store, url, checkStock} of sites) {
+        const {hasStock, shopUrl} = await checkStock({browser, url: url});
+        stocks.push({
+          store: store,
+          hasStock,
+          shopUrl,
+        });
+      }
+
+      await browser.close();
+      await sendEmail(stocks);
+    });
