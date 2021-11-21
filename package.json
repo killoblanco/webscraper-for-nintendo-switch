@@ -4,9 +4,9 @@
     "start": "ts-node src"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "dotenv": "^10.0.0",
     "playwright": "^1.16.3",
-    "ts-mailgun": "^0.5.1",
     "ts-node": "^10.4.0",
     "typescript": "^3.8.0"
   }
