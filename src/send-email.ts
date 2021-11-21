@@ -1,21 +1,19 @@
-import { NodeMailgun } from 'ts-mailgun';
+import sendGrid from '@sendgrid/mail';
 import { config as dotConfig } from 'dotenv';
 import { StockInfo } from './types';
 
 dotConfig();
 
-const mailgunClient = new NodeMailgun(
-  process.env.MG_PK! as string,
-  process.env.MG_HOST! as string,
-);
-
-mailgunClient.fromEmail = 'switch.alert@mailgun.org';
-mailgunClient.fromTitle = 'Automated nSwitch stock alert';
-
-mailgunClient.init();
+sendGrid.setApiKey(process.env.SG_AK!);
 
 async function sendEmail(stockInfo: StockInfo[]) {
-  let body = '<ul>';
+  const msg = {
+    to: process.env.SG_TO!,
+    from: process.env.SG_FROM!,
+    subject: 'Automated nSwitch stock alert',
+    text: 'Stock Found',
+  };
+  let html = '<p>Stock Found:</p><ul>';
 
   const shouldSend = stockInfo.some((stock) => stock.hasStock);
 
@@ -23,19 +21,17 @@ async function sendEmail(stockInfo: StockInfo[]) {
     console.log('Stock found, sending email...');
     for (const stock of stockInfo) {
       if (stock.hasStock) {
-        body += `<li>🎉 ${stock.store} has stock in ${stock.shopUrl}</li>`;
+        const link = `<a href="${stock.shopUrl}">here</a>`
+        html += `<li>🎉 ${stock.store} has stock in ${link}</li>`;
       } else {
-        body += `<li>😖 ${stock.store} is out of stock!</li>`;
+        html += `<li>😖 ${stock.store} is out of stock!</li>`;
       }
     }
 
-    body += '</ul>';
+    html += '</ul>';
 
-    await mailgunClient.send(
-      process.env.MG_MAIL_TO! as string,
-      'Nintendo Switch Alert',
-      body,
-    );
+    await sendGrid.send({ ...msg, html });
+    console.log('Email sent.')
   }
 }
 
