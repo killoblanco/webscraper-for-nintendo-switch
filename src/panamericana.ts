@@ -14,10 +14,11 @@ async function checkStock({ browser, url }: CheckStockProps) {
   let shopUrl = '';
   for (const item of items) {
     const text = await item.textContent();
-    hasStock = text ? text.toLocaleLowerCase().includes('oled') : false;
+    hasStock = text?.toLocaleLowerCase().includes('oled') ?? false;
     shopUrl = hasStock ?
       (await item.getProperty('href') as unknown as string) :
       '';
+    if (hasStock) break;
   }
   await page.close();
   return { hasStock, shopUrl };
