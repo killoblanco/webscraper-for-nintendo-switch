@@ -21,8 +21,7 @@ async function sendEmail(stockInfo: StockInfo[]) {
     console.log('Stock found, sending email...');
     for (const stock of stockInfo) {
       if (stock.hasStock) {
-        const link = `<a href="${stock.shopUrl}">here</a>`
-        html += `<li>🎉 ${stock.store} has stock in ${link}</li>`;
+        html += `<li>🎉 ${stock.store} has stock in ${stock.shopUrl}</li>`;
       } else {
         html += `<li>😖 ${stock.store} is out of stock!</li>`;
       }
